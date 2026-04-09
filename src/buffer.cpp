@@ -25,6 +25,17 @@ Buffer::Load(std::string_view file) -> void
 }
 
 auto
+Buffer::LoadFromMemory(const std::uint8_t *data, std::size_t size) -> void
+{
+  Clear();
+
+  if (!data || size == 0)
+    throw std::runtime_error("Buffer::LoadFromMemory: invalid data or size");
+
+  buffer_.assign(data, data + size);
+}
+
+auto
 Buffer::Skip(std::size_t bytes) -> void
 {
   if (position_ + bytes > buffer_.size())
