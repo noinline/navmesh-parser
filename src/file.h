@@ -10,8 +10,10 @@ class File
 public:
   File() = default;
   explicit File(std::string_view file);
+  File(const std::uint8_t *data, std::size_t size);
   ~File();
   void Load(std::string_view file);
+  void LoadFromMemory(const std::uint8_t *data, std::size_t size);
 
   auto
   area_by_id(std::uint32_t id) -> Area &
@@ -76,6 +78,7 @@ public:
   std::string ReadNullTerminatedString();
 
 private:
+  void Parse();
   void Unload();
   void ReadPolygons();
   void ReadLadders();
