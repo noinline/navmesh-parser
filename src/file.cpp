@@ -4,21 +4,35 @@
 namespace navmesh {
 File::File(std::string_view file) { Load(file); }
 
+File::File(const std::uint8_t *data, std::size_t size) { LoadFromMemory(data, size); }
+
 File::~File() { Unload(); }
+
+auto
+File::LoadFromMemory(const std::uint8_t *data, std::size_t size) -> void
+{
+  buffer_.LoadFromMemory(data, size);
+  Parse();
+}
 
 auto
 File::Load(std::string_view file) -> void
 {
   buffer_.Load(file);
+  Parse();
+}
 
+auto
+File::Parse() -> void
+{
   auto magic = buffer_.Read<std::uint32_t>();
   if (magic != kMagic)
     throw std::runtime_error(
-        "File::Load: magic mismatch, what are you trying to feed me? -_-");
+        "File::Parse: magic mismatch, what are you trying to feed me? -_-");
 
   version_ = buffer_.Read<std::uint32_t>();
   if (version_ < 31 || version_ > 36)
-    throw std::runtime_error("File::Load: unsupported version");
+    throw std::runtime_error("File::Parse: unsupported version");
 
   sub_version_ = buffer_.Read<std::uint32_t>();
 

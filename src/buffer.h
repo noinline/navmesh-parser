@@ -11,6 +11,7 @@ public:
   ~Buffer();
 
   void Load(std::string_view file);
+  void LoadFromMemory(const std::uint8_t *data, std::size_t size);
   void Skip(std::size_t bytes);
   void Clear();
 
